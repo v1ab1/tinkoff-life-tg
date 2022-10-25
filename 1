@@ -12,22 +12,27 @@ const start = async () => {
     var condition = '';
     var msgId = '';
     var name = '';
-    var stage = 0;
-
     const fs = require("fs");
     const contents = fs.readFileSync("./db.json");
     const jsonContent = JSON.parse(contents);
-
-    bot.on('message', async msg => {
-        if (msg.text === '/start') {
+    if (condition == '') {
+        bot.on('message', async msg => {
             await bot.sendMessage(msg.chat.id, `Привет ${msg.from.first_name}, добро пожаловать в коммьюнити Тинькофф`);
-        }
-        let personalData = jsonContent.find(el => el.id === msgId);
-        if (personalData == undefined) {
-            condition = 'creation';
-            
-        };
-    });
+            console.log(msg);
+            msgId = msg.from.id;
+        });
+    }
+    let personalData = jsonContent.find(el => el.id === msgId);
+    if (personalData == undefined) {
+        condition = 'creation';
+        bot.on('message', async msg => {
+            await bot.sendMessage(msg.chat.id, `Как тебя называть?`);
+            name = msg.text;
+            console.log(name);
+        });
+        bot.on('message')
+    };
+    console.log(condition);
 };
 
 start();
